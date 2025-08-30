@@ -1,526 +1,93 @@
 {{!< default}}
 
-{{!-- Individual post template for ThinkHome theme --}}
 {{#post}}
-<main class="site-main">
-    <div class="container">
-        <article class="post {{post_class}}">
-            <header class="post-header">
-                {{#if primary_tag}}
-                <div class="post-tag-wrapper">
-                    <a href="{{primary_tag.url}}" class="post-tag">[{{primary_tag.name}}]</a>
-                </div>
-                {{/if}}
-                
-                <h1 class="post-title">{{title}}</h1>
-                
-                <div class="post-meta">
-                    <time class="post-date" datetime="{{date format='YYYY-MM-DD'}}">{{date format='YYYY-MM-DD'}}</time>
-                    {{#if primary_author}}
-                    <span class="post-author">by <a href="{{primary_author.url}}">{{primary_author.name}}</a></span>
-                    {{/if}}
-                    {{#if reading_time}}
-                    <span class="reading-time">~{{reading_time}} min read</span>
-                    {{/if}}
-                </div>
-                
-                {{#if custom_excerpt}}
-                <div class="post-excerpt">
-                    <p>{{custom_excerpt}}</p>
-                </div>
-                {{/if}}
-            </header>
-            
-            {{#if feature_image}}
-            <figure class="post-image">
-                <img src="{{img_url feature_image size='xl'}}" alt="{{#if feature_image_alt}}{{feature_image_alt}}{{else}}{{title}}{{/if}}" loading="lazy">
-                {{#if feature_image_caption}}
+
+<article class="gh-article {{post_class}}">
+
+    <header class="gh-header gh-canvas">
+        <span class="gh-post-meta"><time datetime="{{date format="YYYY-MM-DD"}}">{{date format="D MMM YYYY"}}</time> <span class="bull">&bull;</span> {{reading_time}}</span>
+        <h1 class="gh-title">{{title}}</h1>
+
+        {{#if custom_excerpt}}
+        <p class="gh-excerpt">{{custom_excerpt}}</p>
+        {{/if}}
+
+        {{#if feature_image}}
+        <figure class="gh-feature-image">
+            <picture>
+              <source 
+                srcset="
+                {{img_url feature_image size="xxs" format="avif"}} 30w,
+                {{img_url feature_image size="xs" format="avif"}} 100w,
+                {{img_url feature_image size="s" format="avif"}} 300w,
+                {{img_url feature_image size="m" format="avif"}} 600w,
+                {{img_url feature_image size="l" format="avif"}} 1200w,
+                {{img_url feature_image size="xl" format="avif"}} 2000w"
+                sizes="(min-width: 1200px) 1200px, 90vw" 
+                type="image/avif"
+              >
+              <source 
+                srcset="
+                {{img_url feature_image size="xxs" format="webp"}} 30w,
+                {{img_url feature_image size="xs" format="webp"}} 100w,
+                {{img_url feature_image size="s" format="webp"}} 300w,
+                {{img_url feature_image size="m" format="webp"}} 600w,
+                {{img_url feature_image size="l" format="webp"}} 1200w,
+                {{img_url feature_image size="xl" format="webp"}} 2000w"
+                sizes="(min-width: 1200px) 1200px, 90vw" 
+                type="image/webp"
+              >
+              <img
+                srcset="
+                {{img_url feature_image size="xxs"}} 30w,
+                {{img_url feature_image size="xs"}} 100w,
+                {{img_url feature_image size="s"}} 300w,
+                {{img_url feature_image size="m"}} 600w,
+                {{img_url feature_image size="l"}} 1200w,
+                {{img_url feature_image size="xl"}} 2000w"
+                sizes="(min-width: 1200px) 1200px, 90vw" 
+                src="{{img_url feature_image size="l"}}"
+                alt="{{#if feature_image_alt}}{{feature_image_alt}}{{else}}{{title}}{{/if}}"
+              >
+            </picture>
+            {{#if feature_image_caption}}
                 <figcaption>{{feature_image_caption}}</figcaption>
-                {{/if}}
-            </figure>
             {{/if}}
-            
-            <div class="post-content">
-                {{content}}
-            </div>
-            
-            <footer class="post-footer">
-                {{#if tags}}
-                <div class="post-tags">
-                    <span class="tags-label">tags:</span>
-                    {{#foreach tags}}
-                    <a href="{{url}}" class="tag-link">#{{name}}</a>{{#unless @last}}, {{/unless}}
-                    {{/foreach}}
-                </div>
-                {{/if}}
-                
-                <div class="post-share">
-                    <span class="share-label">share:</span>
-                    <a href="https://twitter.com/intent/tweet?text={{encode title}}&url={{url absolute='true'}}" class="share-link" target="_blank" rel="noopener">twitter</a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u={{url absolute='true'}}" class="share-link" target="_blank" rel="noopener">facebook</a>
-                    <button class="share-link copy-link" data-url="{{url absolute='true'}}">copy_link</button>
-                </div>
-            </footer>
-        </article>
-        
-        {{#if primary_author}}
-        <section class="author-card">
-            <div class="author-info">
-                {{#if primary_author.profile_image}}
-                <img src="{{img_url primary_author.profile_image size='s'}}" alt="{{primary_author.name}}" class="author-avatar">
-                {{/if}}
-                <div class="author-details">
-                    <h3 class="author-name">{{primary_author.name}}</h3>
-                    {{#if primary_author.bio}}
-                    <p class="author-bio">{{primary_author.bio}}</p>
-                    {{/if}}
-                    <div class="author-meta">
-                        {{#if primary_author.location}}
-                        <span class="author-location">location: {{primary_author.location}}</span>
-                        {{/if}}
-                        {{#if primary_author.website}}
-                        <a href="{{primary_author.website}}" class="author-website" target="_blank" rel="noopener">website</a>
-                        {{/if}}
-                    </div>
-                </div>
-            </div>
-        </section>
+        </figure>
         {{/if}}
-        
-        {{!-- Related posts --}}
-        {{#get "posts" filter="tags:{{primary_tag.slug}}+id:-{{comment_id}}" limit="3" as |related_posts|}}
-        {{#if related_posts}}
-        <section class="related-posts">
-            <h3 class="related-title">related_posts()</h3>
-            <div class="related-grid">
-                {{#foreach related_posts}}
-                <article class="related-post">
-                    <h4 class="related-post-title">
-                        <a href="{{url}}">{{title}}</a>
-                    </h4>
-                    <div class="related-post-meta">
-                        <time datetime="{{date format='YYYY-MM-DD'}}">{{date format='YYYY-MM-DD'}}</time>
-                    </div>
-                </article>
-                {{/foreach}}
-            </div>
-        </section>
-        {{/if}}
-        {{/get}}
-        
-        {{!-- Navigation --}}
-        <nav class="post-navigation">
-            {{#prev_post}}
-            <div class="nav-previous">
-                <span class="nav-label">← prev:</span>
-                <a href="{{url}}" class="nav-link">{{title}}</a>
-            </div>
-            {{/prev_post}}
-            {{#next_post}}
-            <div class="nav-next">
-                <span class="nav-label">next: →</span>
-                <a href="{{url}}" class="nav-link">{{title}}</a>
-            </div>
-            {{/next_post}}
-        </nav>
-        
+    </header>
+
+    <div class="gh-content gh-canvas">
+        {{content}}
+    </div>
+
+    <footer class="gh-footer gh-canvas">
+
+        <div class="gh-post-authors">
+            Written by {{#foreach authors}}<a href="{{url}}">{{name}}</a>{{/foreach}}
+        </div>
+
         {{#if comments}}
-        <section class="post-comments" id="comments-{{comment_id}}">
-            <h3 class="comments-title">comments()</h3>
+        <section class="gh-post-comments">
             {{comments}}
         </section>
         {{/if}}
+
+    </footer>
+
+</article>
+
+<aside class="gh-readmore">
+    <div class="gh-readmore-inner gh-container">
+        <div class="gh-readmore-next">
+            {{#next_post}}<a href="{{url}}">{{> "icons/arrow-left"}} <h4>{{title}}</h4></a>{{/next_post}}
+        </div>
+        <div class="gh-readmore-prev">
+            {{#prev_post}}<a href="{{url}}">
+                <h4>{{title}}</h4> {{> "icons/arrow-right"}}
+            </a>{{/prev_post}}
+        </div>
     </div>
-</main>
+</aside>
+
 {{/post}}
-
-<style>
-/* Post template specific styles */
-.post {
-    margin-bottom: var(--spacing-2xl);
-}
-
-.post-header {
-    margin-bottom: var(--spacing-xl);
-    padding-bottom: var(--spacing-lg);
-    border-bottom: var(--border-width) var(--border-style) var(--border);
-}
-
-.post-tag-wrapper {
-    margin-bottom: var(--spacing-md);
-}
-
-.post-tag {
-    color: var(--accent);
-    text-decoration: none;
-    font-size: var(--font-size-sm);
-    font-family: var(--font-mono);
-}
-
-.post-tag:hover {
-    color: var(--fg-primary);
-}
-
-.post-title {
-    font-size: var(--font-size-3xl);
-    margin: 0 0 var(--spacing-lg) 0;
-    color: var(--fg-primary);
-    line-height: var(--line-height-heading);
-}
-
-.post-meta {
-    display: flex;
-    gap: var(--spacing-md);
-    font-size: var(--font-size-sm);
-    color: var(--fg-muted);
-    flex-wrap: wrap;
-    margin-bottom: var(--spacing-md);
-}
-
-.post-meta a {
-    color: var(--fg-secondary);
-    text-decoration: none;
-}
-
-.post-meta a:hover {
-    color: var(--accent);
-}
-
-.post-excerpt {
-    margin: var(--spacing-lg) 0;
-    padding: var(--spacing-md);
-    background-color: var(--bg-secondary);
-    border-left: 4px solid var(--accent);
-}
-
-.post-excerpt p {
-    margin: 0;
-    color: var(--fg-secondary);
-    font-style: italic;
-}
-
-.post-image {
-    margin: var(--spacing-xl) 0;
-    text-align: center;
-}
-
-.post-image img {
-    max-width: 100%;
-    height: auto;
-    border: var(--border-width) var(--border-style) var(--border);
-}
-
-.post-image figcaption {
-    margin-top: var(--spacing-sm);
-    font-size: var(--font-size-sm);
-    color: var(--fg-muted);
-    font-style: italic;
-}
-
-.post-content {
-    margin: var(--spacing-xl) 0;
-    line-height: var(--line-height-base);
-}
-
-.post-content h2,
-.post-content h3,
-.post-content h4,
-.post-content h5,
-.post-content h6 {
-    margin: var(--spacing-xl) 0 var(--spacing-md) 0;
-    color: var(--fg-primary);
-}
-
-.post-content p {
-    margin-bottom: var(--spacing-md);
-    color: var(--fg-secondary);
-}
-
-.post-content blockquote {
-    margin: var(--spacing-lg) 0;
-    padding: var(--spacing-md);
-    border-left: 4px solid var(--accent);
-    background-color: var(--bg-secondary);
-    font-style: italic;
-}
-
-.post-content blockquote p {
-    margin: 0;
-}
-
-.post-content ul,
-.post-content ol {
-    margin: var(--spacing-md) 0;
-    padding-left: var(--spacing-lg);
-}
-
-.post-content li {
-    margin-bottom: var(--spacing-xs);
-    color: var(--fg-secondary);
-}
-
-.post-footer {
-    margin-top: var(--spacing-xl);
-    padding-top: var(--spacing-lg);
-    border-top: var(--border-width) var(--border-style) var(--border);
-}
-
-.post-tags {
-    margin-bottom: var(--spacing-lg);
-}
-
-.tags-label,
-.share-label {
-    color: var(--fg-muted);
-    font-family: var(--font-mono);
-    margin-right: var(--spacing-sm);
-}
-
-.tag-link {
-    color: var(--accent);
-    text-decoration: none;
-    font-family: var(--font-mono);
-}
-
-.tag-link:hover {
-    color: var(--fg-primary);
-}
-
-.post-share {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
-    flex-wrap: wrap;
-}
-
-.share-link {
-    color: var(--fg-secondary);
-    text-decoration: none;
-    font-family: var(--font-mono);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: var(--font-size-base);
-}
-
-.share-link:hover {
-    color: var(--accent);
-}
-
-/* Author card */
-.author-card {
-    margin: var(--spacing-2xl) 0;
-    padding: var(--spacing-lg);
-    border: var(--border-width) var(--border-style) var(--border);
-    background-color: var(--bg-secondary);
-}
-
-.author-info {
-    display: flex;
-    gap: var(--spacing-md);
-    align-items: flex-start;
-}
-
-.author-avatar {
-    width: 64px;
-    height: 64px;
-    border: var(--border-width) var(--border-style) var(--border);
-    flex-shrink: 0;
-}
-
-.author-name {
-    margin: 0 0 var(--spacing-sm) 0;
-    color: var(--fg-primary);
-    font-size: var(--font-size-lg);
-}
-
-.author-bio {
-    margin: 0 0 var(--spacing-sm) 0;
-    color: var(--fg-secondary);
-}
-
-.author-meta {
-    display: flex;
-    gap: var(--spacing-md);
-    font-size: var(--font-size-sm);
-    color: var(--fg-muted);
-    flex-wrap: wrap;
-}
-
-.author-website {
-    color: var(--accent);
-    text-decoration: none;
-}
-
-.author-website:hover {
-    color: var(--fg-primary);
-}
-
-/* Related posts */
-.related-posts {
-    margin-top: var(--spacing-2xl);
-    padding-top: var(--spacing-xl);
-    border-top: var(--border-width) var(--border-style) var(--border);
-}
-
-.related-title {
-    margin-bottom: var(--spacing-lg);
-    color: var(--fg-primary);
-    font-family: var(--font-mono);
-}
-
-.related-grid {
-    display: grid;
-    gap: var(--spacing-lg);
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-}
-
-.related-post {
-    padding: var(--spacing-md);
-    border: var(--border-width) var(--border-style) var(--border);
-    background-color: var(--bg-secondary);
-}
-
-.related-post-title {
-    margin: 0 0 var(--spacing-sm) 0;
-    font-size: var(--font-size-base);
-}
-
-.related-post-title a {
-    color: var(--fg-primary);
-    text-decoration: none;
-}
-
-.related-post-title a:hover {
-    color: var(--accent);
-}
-
-.related-post-meta {
-    font-size: var(--font-size-sm);
-    color: var(--fg-muted);
-}
-
-/* Post navigation */
-.post-navigation {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--spacing-lg);
-    margin: var(--spacing-2xl) 0;
-    padding: var(--spacing-lg) 0;
-    border-top: var(--border-width) var(--border-style) var(--border);
-    border-bottom: var(--border-width) var(--border-style) var(--border);
-}
-
-.nav-previous {
-    text-align: left;
-}
-
-.nav-next {
-    text-align: right;
-}
-
-.nav-label {
-    display: block;
-    font-size: var(--font-size-sm);
-    color: var(--fg-muted);
-    font-family: var(--font-mono);
-    margin-bottom: var(--spacing-xs);
-}
-
-.nav-link {
-    color: var(--fg-primary);
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.nav-link:hover {
-    color: var(--accent);
-}
-
-/* Comments */
-.post-comments {
-    margin-top: var(--spacing-2xl);
-    padding-top: var(--spacing-xl);
-    border-top: var(--border-width) var(--border-style) var(--border);
-}
-
-.comments-title {
-    margin-bottom: var(--spacing-lg);
-    color: var(--fg-primary);
-    font-family: var(--font-mono);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .post-title {
-        font-size: var(--font-size-2xl);
-    }
-    
-    .post-meta {
-        flex-direction: column;
-        gap: var(--spacing-xs);
-    }
-    
-    .post-share {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .author-info {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .author-avatar {
-        align-self: center;
-    }
-    
-    .related-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .post-navigation {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-    }
-    
-    .nav-next {
-        text-align: left;
-    }
-}
-</style>
-
-<script>
-// Copy link functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const copyButtons = document.querySelectorAll('.copy-link');
-    
-    copyButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const url = this.dataset.url;
-            
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(url).then(() => {
-                    this.textContent = 'copied!';
-                    setTimeout(() => {
-                        this.textContent = 'copy_link';
-                    }, 2000);
-                });
-            } else {
-                // Fallback for older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = url;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                
-                this.textContent = 'copied!';
-                setTimeout(() => {
-                    this.textContent = 'copy_link';
-                }, 2000);
-            }
-        });
-    });
-});
-</script>

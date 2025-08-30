@@ -1,229 +1,35 @@
 {{!< default}}
 
-{{!-- Tag archive template for ThinkHome theme --}}
-<main class="site-main">
-    <div class="container">
-        <header class="archive-header">
-            <h1 class="archive-title">tag: #{{tag.name}}</h1>
-            {{#if tag.description}}
-            <div class="archive-description">
-                <p>{{tag.description}}</p>
-            </div>
-            {{/if}}
-            <div class="archive-meta">
-                <span class="post-count">{{plural pagination.total empty='no posts' singular='% post' plural='% posts'}}</span>
-            </div>
-        </header>
-        
-        {{#if posts}}
-        <div class="post-feed">
-            {{#foreach posts}}
-            <article class="post-card {{post_class}}">
-                <header class="post-card-header">
-                    {{#if primary_tag}}
-                    <div class="post-card-tag">
-                        <a href="{{primary_tag.url}}" class="tag-link">[{{primary_tag.name}}]</a>
-                    </div>
-                    {{/if}}
-                    
-                    <h2 class="post-card-title">
-                        <a href="{{url}}">{{title}}</a>
-                    </h2>
-                    
-                    <div class="post-card-meta">
-                        <time class="post-card-date" datetime="{{date format='YYYY-MM-DD'}}">{{date format='YYYY-MM-DD'}}</time>
-                        {{#if reading_time}}
-                        <span class="reading-time">~{{reading_time}} min</span>
-                        {{/if}}
-                    </div>
-                </header>
-                
-                {{#if excerpt}}
-                <div class="post-card-excerpt">
-                    <p>{{excerpt words='25'}}</p>
-                </div>
+<div class="gh-page">
+    <div class="gh-container">
+
+        {{#tag}}
+        <header class="gh-page-head">
+
+            <h1>{{name}}</h1>
+
+            <p>
+                {{#if description}}
+                    {{description}}
+                {{else}}
+                    A collection of {{plural ../pagination.total empty='posts' singular='% post' plural='% posts'}}
                 {{/if}}
-                
-                <footer class="post-card-footer">
-                    <a href="{{url}}" class="read-more">read_more() →</a>
-                </footer>
-            </article>
-            {{/foreach}}
+            </p>
+
+            {{#if feature_image}}
+                <img class="gh-page-image" src="{{feature_image}}" alt="{{name}}" />
+            {{/if}}
+
+        </header>
+        {{/tag}}
+
+        <div class="gh-postfeed">
+        {{#foreach posts}}
+
+            {{> "card"}} {{!-- partials/card.hbs --}}
+
+        {{/foreach}}
         </div>
-        
-        {{pagination}}
-        {{else}}
-        <div class="no-posts">
-            <p class="no-posts-message">// no posts found with tag "{{tag.name}}"</p>
-            <a href="{{@site.url}}" class="back-home">← back_to_home()</a>
-        </div>
-        {{/if}}
+
     </div>
-</main>
-
-<style>
-/* Tag archive specific styles */
-.archive-header {
-    margin-bottom: var(--spacing-2xl);
-    padding-bottom: var(--spacing-xl);
-    border-bottom: var(--border-width) var(--border-style) var(--border);
-}
-
-.archive-title {
-    font-size: var(--font-size-3xl);
-    margin: 0 0 var(--spacing-lg) 0;
-    color: var(--fg-primary);
-    font-family: var(--font-mono);
-    line-height: var(--line-height-heading);
-}
-
-.archive-description {
-    margin: var(--spacing-lg) 0;
-    padding: var(--spacing-md);
-    background-color: var(--bg-secondary);
-    border-left: 4px solid var(--accent);
-}
-
-.archive-description p {
-    margin: 0;
-    color: var(--fg-secondary);
-    font-style: italic;
-}
-
-.archive-meta {
-    font-size: var(--font-size-sm);
-    color: var(--fg-muted);
-    font-family: var(--font-mono);
-}
-
-.post-count {
-    color: var(--accent);
-}
-
-/* Post feed styles */
-.post-feed {
-    display: grid;
-    gap: var(--spacing-xl);
-    margin-bottom: var(--spacing-2xl);
-}
-
-.post-card {
-    padding: var(--spacing-lg);
-    border: var(--border-width) var(--border-style) var(--border);
-    background-color: var(--bg-secondary);
-    transition: border-color 0.2s ease;
-}
-
-.post-card:hover {
-    border-color: var(--accent);
-}
-
-.post-card-header {
-    margin-bottom: var(--spacing-md);
-}
-
-.post-card-tag {
-    margin-bottom: var(--spacing-sm);
-}
-
-.tag-link {
-    color: var(--accent);
-    text-decoration: none;
-    font-size: var(--font-size-sm);
-    font-family: var(--font-mono);
-}
-
-.tag-link:hover {
-    color: var(--fg-primary);
-}
-
-.post-card-title {
-    margin: 0 0 var(--spacing-sm) 0;
-    font-size: var(--font-size-xl);
-    line-height: var(--line-height-heading);
-}
-
-.post-card-title a {
-    color: var(--fg-primary);
-    text-decoration: none;
-}
-
-.post-card-title a:hover {
-    color: var(--accent);
-}
-
-.post-card-meta {
-    display: flex;
-    gap: var(--spacing-md);
-    font-size: var(--font-size-sm);
-    color: var(--fg-muted);
-    font-family: var(--font-mono);
-    flex-wrap: wrap;
-}
-
-.post-card-excerpt {
-    margin: var(--spacing-md) 0;
-}
-
-.post-card-excerpt p {
-    margin: 0;
-    color: var(--fg-secondary);
-    line-height: var(--line-height-base);
-}
-
-.post-card-footer {
-    margin-top: var(--spacing-md);
-    padding-top: var(--spacing-md);
-    border-top: var(--border-width) var(--border-style) var(--border);
-}
-
-.read-more {
-    color: var(--accent);
-    text-decoration: none;
-    font-family: var(--font-mono);
-    font-size: var(--font-size-sm);
-}
-
-.read-more:hover {
-    color: var(--fg-primary);
-}
-
-/* No posts state */
-.no-posts {
-    text-align: center;
-    padding: var(--spacing-2xl) 0;
-}
-
-.no-posts-message {
-    font-size: var(--font-size-lg);
-    color: var(--fg-muted);
-    font-family: var(--font-mono);
-    margin-bottom: var(--spacing-lg);
-}
-
-.back-home {
-    color: var(--accent);
-    text-decoration: none;
-    font-family: var(--font-mono);
-}
-
-.back-home:hover {
-    color: var(--fg-primary);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .archive-title {
-        font-size: var(--font-size-2xl);
-    }
-    
-    .post-card-title {
-        font-size: var(--font-size-lg);
-    }
-    
-    .post-card-meta {
-        flex-direction: column;
-        gap: var(--spacing-xs);
-    }
-}
-</style>
+</div>
