@@ -22,7 +22,7 @@ A minimalist, developer-focused Ghost theme with terminal aesthetics
     
     /* Typography */
     --font-mono: 'IBM Plex Mono', 'SF Mono', 'Monaco', 'Inconsolata', monospace;
-    --font-size-base: var(--base-font-size, 16px);
+    --font-size-base: {{#match @custom.font_size "Small (14px)"}}14px{{/match}}{{#match @custom.font_size "Medium (16px)"}}16px{{/match}}{{#match @custom.font_size "Large (18px)"}}18px{{/match}};
     --font-size-sm: calc(var(--font-size-base) * 0.875);
     --font-size-lg: calc(var(--font-size-base) * 1.25);
     --font-size-xl: calc(var(--font-size-base) * 1.5);
