@@ -1,20 +1,205 @@
 {{!< default}}
-<div class="gh-page">
-    <div class="gh-container">
 
-        <div class="gh-postfeed">
-        {{#foreach posts}}
+{{!-- Homepage template for ThinkHome theme --}}
+<main class="site-main">
+    <div class="container">
+        {{#if @site.description}}
+        <section class="site-intro">
+            <h1 class="site-title">{{@site.title}}<span class="cursor">_</span></h1>
+            <p class="site-description">{{@site.description}}</p>
+        </section>
+        {{/if}}
 
-            {{> "card" page=../pagination.page }} {{!-- partials/card.hbs --}}
-
-        {{/foreach}}
-        </div>
-
-        {{!-- If JS isn't enabled, fallback to standard pagination --}}
-        <noscript>
-            <div class="gh-pagination">
-                {{pagination}}
+        {{#if posts}}
+        <section class="post-feed">
+            <div class="post-list">
+                {{#foreach posts}}
+                <article class="post-card">
+                    <header class="post-header">
+                        <h2 class="post-title">
+                            <a href="{{url}}" class="post-link">{{title}}</a>
+                        </h2>
+                        <div class="post-meta">
+                            <time class="post-date" datetime="{{date format='YYYY-MM-DD'}}">{{date format='YYYY-MM-DD'}}</time>
+                            {{#if primary_author}}
+                            <span class="post-author">by {{primary_author.name}}</span>
+                            {{/if}}
+                            {{#if primary_tag}}
+                            <span class="post-tag">[{{primary_tag.name}}]</span>
+                            {{/if}}
+                        </div>
+                    </header>
+                    
+                    {{#if excerpt}}
+                    <div class="post-excerpt">
+                        <p>{{excerpt}}</p>
+                    </div>
+                    {{/if}}
+                    
+                    <footer class="post-footer">
+                        <a href="{{url}}" class="read-more">read_more() →</a>
+                        {{#if reading_time}}
+                        <span class="reading-time">~{{reading_time}} min</span>
+                        {{/if}}
+                    </footer>
+                </article>
+                {{/foreach}}
             </div>
-        </noscript>
+        </section>
+        
+        {{!-- Pagination --}}
+        {{pagination}}
+        {{else}}
+        <section class="no-posts">
+            <h2>No posts found</h2>
+            <p>// TODO: Write some content</p>
+        </section>
+        {{/if}}
     </div>
-</div>
+</main>
+
+<style>
+/* Homepage specific styles */
+.site-intro {
+    margin-bottom: var(--spacing-2xl);
+    padding: var(--spacing-xl) 0;
+    border-bottom: var(--border-width) var(--border-style) var(--border);
+}
+
+.site-title {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-md);
+    color: var(--fg-primary);
+}
+
+.site-description {
+    font-size: var(--font-size-lg);
+    color: var(--fg-secondary);
+    margin: 0;
+}
+
+.post-feed {
+    margin-top: var(--spacing-xl);
+}
+
+.post-list {
+    display: grid;
+    gap: var(--spacing-xl);
+}
+
+.post-card {
+    padding: var(--spacing-lg);
+    border: var(--border-width) var(--border-style) var(--border);
+    background-color: var(--bg-secondary);
+}
+
+.post-header {
+    margin-bottom: var(--spacing-md);
+}
+
+.post-title {
+    margin: 0 0 var(--spacing-sm) 0;
+    font-size: var(--font-size-xl);
+}
+
+.post-link {
+    color: var(--fg-primary);
+    text-decoration: none;
+}
+
+.post-link:hover {
+    color: var(--accent);
+}
+
+.post-meta {
+    display: flex;
+    gap: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--fg-muted);
+    flex-wrap: wrap;
+}
+
+.post-date,
+.post-author,
+.post-tag {
+    font-family: var(--font-mono);
+}
+
+.post-tag {
+    color: var(--accent);
+}
+
+.post-excerpt {
+    margin: var(--spacing-md) 0;
+}
+
+.post-excerpt p {
+    color: var(--fg-secondary);
+    margin: 0;
+}
+
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: var(--border-width) var(--border-style) var(--border);
+}
+
+.read-more {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--font-mono);
+}
+
+.read-more:hover {
+    color: var(--fg-primary);
+}
+
+.reading-time {
+    font-size: var(--font-size-sm);
+    color: var(--fg-muted);
+}
+
+.no-posts {
+    text-align: center;
+    padding: var(--spacing-2xl) 0;
+}
+
+.no-posts h2 {
+    color: var(--fg-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.no-posts p {
+    color: var(--fg-muted);
+    font-family: var(--font-mono);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .site-intro {
+        padding: var(--spacing-lg) 0;
+    }
+    
+    .site-title {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .post-card {
+        padding: var(--spacing-md);
+    }
+    
+    .post-meta {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+    
+    .post-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+}
+</style>

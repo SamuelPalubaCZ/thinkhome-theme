@@ -1,29 +1,144 @@
 {{!< default}}
 
+{{!-- Static page template for ThinkHome theme --}}
 {{#post}}
-<article class="gh-article {{post_class}}">
-    {{#match @page.show_title_and_feature_image}}
-    <header class="gh-header gh-canvas">
-        <h1 class="gh-title">{{title}}</h1>
-
-        {{#if custom_excerpt}}
-            <p class="gh-excerpt">{{custom_excerpt}}</p>
-        {{/if}}
-
-        {{#if feature_image}}
-            <figure class="gh-feature-image">
-                <img src="{{feature_image}}" alt="{{#if feature_image_alt}}{{feature_image_alt}}{{else}}{{title}}{{/if}}" />
+<main class="site-main">
+    <div class="container">
+        <article class="page {{post_class}}">
+            <header class="page-header">
+                <h1 class="page-title">{{title}}</h1>
+                
+                {{#if custom_excerpt}}
+                <div class="page-excerpt">
+                    <p>{{custom_excerpt}}</p>
+                </div>
+                {{/if}}
+                
+                <div class="page-meta">
+                    <time class="page-date" datetime="{{date format='YYYY-MM-DD'}}">last_updated: {{date format='YYYY-MM-DD'}}</time>
+                </div>
+            </header>
+            
+            {{#if feature_image}}
+            <figure class="page-image">
+                <img src="{{img_url feature_image size='xl'}}" alt="{{#if feature_image_alt}}{{feature_image_alt}}{{else}}{{title}}{{/if}}" loading="lazy">
                 {{#if feature_image_caption}}
-                    <figcaption>{{feature_image_caption}}</figcaption>
+                <figcaption>{{feature_image_caption}}</figcaption>
                 {{/if}}
             </figure>
-        {{/if}}
-    </header>
-    {{/match}}
-
-    <div class="gh-content gh-canvas">
-        {{content}}
+            {{/if}}
+            
+            <div class="page-content">
+                {{content}}
+            </div>
+        </article>
     </div>
-
-</article>
+</main>
 {{/post}}
+
+<style>
+/* Page template specific styles */
+.page {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.page-header {
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: var(--border-width) var(--border-style) var(--border);
+}
+
+.page-title {
+    font-size: var(--font-size-3xl);
+    margin: 0 0 var(--spacing-lg) 0;
+    color: var(--fg-primary);
+    line-height: var(--line-height-heading);
+}
+
+.page-excerpt {
+    margin: var(--spacing-lg) 0;
+    padding: var(--spacing-md);
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--accent);
+}
+
+.page-excerpt p {
+    margin: 0;
+    color: var(--fg-secondary);
+    font-style: italic;
+}
+
+.page-meta {
+    font-size: var(--font-size-sm);
+    color: var(--fg-muted);
+    font-family: var(--font-mono);
+    margin-bottom: var(--spacing-md);
+}
+
+.page-image {
+    margin: var(--spacing-xl) 0;
+    text-align: center;
+}
+
+.page-image img {
+    max-width: 100%;
+    height: auto;
+    border: var(--border-width) var(--border-style) var(--border);
+}
+
+.page-image figcaption {
+    margin-top: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--fg-muted);
+    font-style: italic;
+}
+
+.page-content {
+    margin: var(--spacing-xl) 0;
+    line-height: var(--line-height-base);
+}
+
+.page-content h2,
+.page-content h3,
+.page-content h4,
+.page-content h5,
+.page-content h6 {
+    margin: var(--spacing-xl) 0 var(--spacing-md) 0;
+    color: var(--fg-primary);
+}
+
+.page-content p {
+    margin-bottom: var(--spacing-md);
+    color: var(--fg-secondary);
+}
+
+.page-content blockquote {
+    margin: var(--spacing-lg) 0;
+    padding: var(--spacing-md);
+    border-left: 4px solid var(--accent);
+    background-color: var(--bg-secondary);
+    font-style: italic;
+}
+
+.page-content blockquote p {
+    margin: 0;
+}
+
+.page-content ul,
+.page-content ol {
+    margin: var(--spacing-md) 0;
+    padding-left: var(--spacing-lg);
+}
+
+.page-content li {
+    margin-bottom: var(--spacing-xs);
+    color: var(--fg-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: var(--font-size-2xl);
+    }
+}
+</style>

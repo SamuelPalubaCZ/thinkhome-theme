@@ -1,0 +1,48 @@
+<header class="site-header" role="banner">
+    <div class="header-inner">
+        <div class="site-branding">
+            <a class="site-logo" href="{{@site.url}}">
+                {{#if @site.logo}}
+                    <img src="{{@site.logo}}" alt="{{@site.title}}" class="logo-image" />
+                {{else}}
+                    <span class="logo-text">{{@site.title}}{{#if @custom.show_cursor}}<span class="cursor">_</span>{{/if}}</span>
+                {{/if}}
+            </a>
+        </div>
+        
+        <nav class="site-nav" role="navigation" aria-label="Main navigation">
+            {{#if @site.navigation}}
+                <ul class="nav-list">
+                    {{#foreach @site.navigation}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{url absolute="true"}}">{{label}}</a>
+                        </li>
+                    {{/foreach}}
+                </ul>
+            {{/if}}
+        </nav>
+        
+        <div class="header-actions">
+            {{#if @site.members_enabled}}
+                <div class="member-actions">
+                    {{#unless @member}}
+                        <a class="action-link" href="#/portal/signin" data-portal="signin">[signin]</a>
+                        <a class="action-button" href="#/portal/signup" data-portal="signup">[subscribe]</a>
+                    {{else}}
+                        <a class="action-button" href="#/portal/account" data-portal="account">[account]</a>
+                    {{/unless}}
+                </div>
+            {{/if}}
+            
+            {{!-- Search toggle --}}
+            <button class="search-toggle" aria-label="Search" data-ghost-search>
+                [search]
+            </button>
+            
+            {{!-- Mobile menu toggle --}}
+            <button class="menu-toggle" aria-label="Menu" aria-expanded="false">
+                <span class="menu-icon">[menu]</span>
+            </button>
+        </div>
+    </div>
+</header>

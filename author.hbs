@@ -1,46 +1,319 @@
 {{!< default}}
 
-<div class="gh-page">
-    <div class="gh-container">
-
-        {{#author}}
-        <header class="gh-page-head">
-            {{#if profile_image}}
-                <img class="gh-author-image" src="{{profile_image}}" alt="{{name}}" />
-            {{/if}}
-
-            <h1>{{name}}</h1>
-            {{#if bio}}
-                <p>{{bio}}</p>
-            {{/if}}
-
-            <div class="gh-author-meta">
-                <div class="gh-author-links">
-                    {{#if website}}
-                        <a href="{{website}}" target="_blank" rel="noopener">Website</a>
+{{!-- Author archive template for ThinkHome theme --}}
+<main class="site-main">
+    <div class="container">
+        <header class="author-header">
+            {{#author}}
+            <div class="author-info">
+                {{#if profile_image}}
+                <div class="author-avatar">
+                    <img src="{{img_url profile_image size='l'}}" alt="{{name}}" />
+                </div>
+                {{/if}}
+                
+                <div class="author-details">
+                    <h1 class="author-name">author: {{name}}</h1>
+                    
+                    {{#if bio}}
+                    <div class="author-bio">
+                        <p>{{bio}}</p>
+                    </div>
                     {{/if}}
+                    
+                    <div class="author-meta">
+                        {{#if location}}
+                        <span class="author-location">location: {{location}}</span>
+                        {{/if}}
+                        {{#if website}}
+                        <a href="{{website}}" class="author-website" target="_blank" rel="noopener">website: {{website}}</a>
+                        {{/if}}
+                        <span class="post-count">{{plural pagination.total empty='no posts' singular='% post' plural='% posts'}}</span>
+                    </div>
+                    
                     {{#if twitter}}
-                        <a href="{{twitter_url}}" target="_blank" rel="noopener">Twitter</a>
-                    {{/if}}
-                    {{#if facebook}}
-                        <a href="{{facebook_url}}" target="_blank" rel="noopener">Facebook</a>
+                    <div class="author-social">
+                        <a href="https://twitter.com/{{twitter}}" class="social-link" target="_blank" rel="noopener">@{{twitter}}</a>
+                    </div>
                     {{/if}}
                 </div>
             </div>
-
-            {{#if cover_image}}
-                <img class="gh-page-image" src="{{cover_image}}" alt="{{name}}" />
-            {{/if}}
+            {{/author}}
         </header>
-        {{/author}}
-
-        <div class="gh-postfeed">
-        {{#foreach posts}}
-
-            {{> "card"}} {{!-- partials/card.hbs --}}
-
-        {{/foreach}}
+        
+        {{#if posts}}
+        <div class="post-feed">
+            {{#foreach posts}}
+            <article class="post-card {{post_class}}">
+                <header class="post-card-header">
+                    {{#if primary_tag}}
+                    <div class="post-card-tag">
+                        <a href="{{primary_tag.url}}" class="tag-link">[{{primary_tag.name}}]</a>
+                    </div>
+                    {{/if}}
+                    
+                    <h2 class="post-card-title">
+                        <a href="{{url}}">{{title}}</a>
+                    </h2>
+                    
+                    <div class="post-card-meta">
+                        <time class="post-card-date" datetime="{{date format='YYYY-MM-DD'}}">{{date format='YYYY-MM-DD'}}</time>
+                        {{#if reading_time}}
+                        <span class="reading-time">~{{reading_time}} min</span>
+                        {{/if}}
+                    </div>
+                </header>
+                
+                {{#if excerpt}}
+                <div class="post-card-excerpt">
+                    <p>{{excerpt words='25'}}</p>
+                </div>
+                {{/if}}
+                
+                <footer class="post-card-footer">
+                    <a href="{{url}}" class="read-more">read_more() →</a>
+                </footer>
+            </article>
+            {{/foreach}}
         </div>
-
+        
+        {{pagination}}
+        {{else}}
+        <div class="no-posts">
+            <p class="no-posts-message">// no posts found by {{name}}</p>
+            <a href="{{@site.url}}" class="back-home">← back_to_home()</a>
+        </div>
+        {{/if}}
     </div>
-</div>
+</main>
+
+<style>
+/* Author archive specific styles */
+.author-header {
+    margin-bottom: var(--spacing-2xl);
+    padding-bottom: var(--spacing-xl);
+    border-bottom: var(--border-width) var(--border-style) var(--border);
+}
+
+.author-info {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: flex-start;
+}
+
+.author-avatar {
+    flex-shrink: 0;
+}
+
+.author-avatar img {
+    width: 80px;
+    height: 80px;
+    border: var(--border-width) var(--border-style) var(--border);
+    background-color: var(--bg-secondary);
+    object-fit: cover;
+}
+
+.author-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.author-name {
+    font-size: var(--font-size-3xl);
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--fg-primary);
+    font-family: var(--font-mono);
+    line-height: var(--line-height-heading);
+}
+
+.author-bio {
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-md);
+    background-color: var(--bg-secondary);
+    border-left: 4px solid var(--accent);
+}
+
+.author-bio p {
+    margin: 0;
+    color: var(--fg-secondary);
+    line-height: var(--line-height-base);
+}
+
+.author-meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    font-family: var(--font-mono);
+    margin: var(--spacing-md) 0;
+}
+
+.author-location {
+    color: var(--fg-muted);
+}
+
+.author-website {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.author-website:hover {
+    color: var(--fg-primary);
+}
+
+.post-count {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.author-social {
+    margin-top: var(--spacing-md);
+}
+
+.social-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+}
+
+.social-link:hover {
+    color: var(--fg-primary);
+}
+
+/* Post feed styles (reused from tag.hbs) */
+.post-feed {
+    display: grid;
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.post-card {
+    padding: var(--spacing-lg);
+    border: var(--border-width) var(--border-style) var(--border);
+    background-color: var(--bg-secondary);
+    transition: border-color 0.2s ease;
+}
+
+.post-card:hover {
+    border-color: var(--accent);
+}
+
+.post-card-header {
+    margin-bottom: var(--spacing-md);
+}
+
+.post-card-tag {
+    margin-bottom: var(--spacing-sm);
+}
+
+.tag-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    font-family: var(--font-mono);
+}
+
+.tag-link:hover {
+    color: var(--fg-primary);
+}
+
+.post-card-title {
+    margin: 0 0 var(--spacing-sm) 0;
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-heading);
+}
+
+.post-card-title a {
+    color: var(--fg-primary);
+    text-decoration: none;
+}
+
+.post-card-title a:hover {
+    color: var(--accent);
+}
+
+.post-card-meta {
+    display: flex;
+    gap: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--fg-muted);
+    font-family: var(--font-mono);
+    flex-wrap: wrap;
+}
+
+.post-card-excerpt {
+    margin: var(--spacing-md) 0;
+}
+
+.post-card-excerpt p {
+    margin: 0;
+    color: var(--fg-secondary);
+    line-height: var(--line-height-base);
+}
+
+.post-card-footer {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: var(--border-width) var(--border-style) var(--border);
+}
+
+.read-more {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+}
+
+.read-more:hover {
+    color: var(--fg-primary);
+}
+
+/* No posts state */
+.no-posts {
+    text-align: center;
+    padding: var(--spacing-2xl) 0;
+}
+
+.no-posts-message {
+    font-size: var(--font-size-lg);
+    color: var(--fg-muted);
+    font-family: var(--font-mono);
+    margin-bottom: var(--spacing-lg);
+}
+
+.back-home {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--font-mono);
+}
+
+.back-home:hover {
+    color: var(--fg-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .author-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .author-name {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .author-meta {
+        align-items: center;
+    }
+    
+    .post-card-title {
+        font-size: var(--font-size-lg);
+    }
+    
+    .post-card-meta {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+}
+</style>

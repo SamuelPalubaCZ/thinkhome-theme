@@ -1,108 +1,377 @@
-<!DOCTYPE html>
-<html lang="{{@site.locale}}">
-<head>
+{{!< default}}
 
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{asset "built/index.css"}}" />
-    <script src="{{asset "built/index.js"}}" defer></script>
-
-    <title>{{meta_title}}</title>
-
-    {{ghost_head}}
-    {{!-- Outputs important meta data and settings, should always be in <head> --}}
-
-</head>
-
-<body class="{{body_class}}">
-<div class="gh-viewport">
-
-<header id="gh-head" class="gh-head">
-    <nav class="gh-head-inner gh-container">
-
-        <div class="gh-head-brand">
-            <a class="gh-head-logo" href="{{@site.url}}">
-                {{#if @site.logo}}
-                    <img src="{{@site.logo}}" alt="{{@site.title}}" />
-                {{else}}
-                    {{@site.title}}
-                {{/if}}
-            </a>
-            <a class="gh-burger" role="button">
-                <div class="gh-burger-box">
-                    <div class="gh-burger-inner"></div>
+{{!-- Error page template for ThinkHome theme --}}
+<main class="site-main">
+    <div class="container">
+        <div class="error-page">
+            <header class="error-header">
+                <div class="error-code">
+                    <span class="error-number">{{statusCode}}</span>
+                    <span class="error-separator">|</span>
+                    <span class="error-type">{{#is "404"}}NOT_FOUND{{else}}ERROR{{/is}}</span>
                 </div>
-            </a>
-        </div>
-        <div class="gh-head-menu">
-            {{navigation}}
-        </div>
-        <div class="gh-head-actions">
-            <div class="gh-head-actions-list">
-                {{#if @site.facebook}}
-                <a href="{{facebook_url @site.facebook}}" title="Facebook" target="_blank" rel="noopener">{{> "icons/facebook"}}</a>
-                {{/if}}
-                {{#if @site.twitter}}
-                <a href="{{twitter_url @site.twitter}}" title="Twitter" target="_blank" rel="noopener">{{> "icons/twitter"}}</a>
-                {{/if}}
-                <a href="https://feedly.com/i/subscription/feed/{{@site.url}}/rss/" title="RSS" target="_blank" rel="noopener">{{> "icons/rss"}}</a>
+                
+                <h1 class="error-title">
+                    {{#is "404"}}
+                    // page not found
+                    {{else}}
+                    // system error
+                    {{/is}}
+                </h1>
+                
+                <div class="error-description">
+                    {{#is "404"}}
+                    <p>The requested resource could not be located on this server.</p>
+                    <p class="error-hint">Check the URL for typos or navigate back to safety.</p>
+                    {{else}}
+                    <p>{{message}}</p>
+                    <p class="error-hint">Please try again later or contact the administrator.</p>
+                    {{/is}}
+                </div>
+            </header>
+            
+            <div class="error-actions">
+                <div class="terminal-prompt">
+                    <span class="prompt-symbol">$</span>
+                    <span class="prompt-text">available_commands:</span>
+                </div>
+                
+                <div class="command-list">
+                    <a href="{{@site.url}}" class="command-link">
+                        <span class="command-name">cd /home</span>
+                        <span class="command-desc">→ return to homepage</span>
+                    </a>
+                    
+                    <a href="javascript:history.back()" class="command-link">
+                        <span class="command-name">cd ..</span>
+                        <span class="command-desc">→ go back one page</span>
+                    </a>
+                    
+                    {{#if @site.navigation}}
+                    {{#foreach @site.navigation}}
+                    <a href="{{url}}" class="command-link">
+                        <span class="command-name">open {{label}}</span>
+                        <span class="command-desc">→ navigate to {{label}}</span>
+                    </a>
+                    {{/foreach}}
+                    {{/if}}
+                </div>
             </div>
-        </div>
-    </nav>
-</header>
-
-<main class="gh-main">
-
-    <section class="gh-page gh-error">
-        <div class="gh-container">
-
-            <section class="gh-error-content">
-
-                <h1 class="gh-error-code">{{statusCode}}</h1>
-                <p class="gh-error-description">{{message}}</p>
-                <p class="gh-error-link"><a href="{{@site.url}}">Go to the front page →</a></p>
-
-                {{#if errorDetails}}
-                <section class="gh-error-stack">
-                    <h4>Theme errors:</h4>
-                    <ul class="gh-error-stack-list">
-                        {{#foreach errorDetails}}
-                        <li>
-                            <h5 class="gh-error-stack-function">{{{rule}}}</h5>
-
-                            {{#foreach failures}}
-                            <span class="gh-error-stack-file"><strong>Ref:</strong> {{ref}}</span><br>
-                            <span class="gh-error-stack-file"><strong>Message:</strong> {{message}}</span>
-                            {{/foreach}}
-                        </li>
+            
+            {{#if errorDetails}}
+            <div class="error-debug">
+                <div class="debug-header">
+                    <span class="debug-label">theme_errors:</span>
+                </div>
+                <div class="debug-content">
+                    {{#foreach errorDetails}}
+                    <div class="debug-section">
+                        <div class="debug-rule">{{{rule}}}</div>
+                        {{#foreach failures}}
+                        <div class="debug-line">
+                            <span class="debug-key">ref</span>
+                            <span class="debug-value">{{ref}}</span>
+                        </div>
+                        <div class="debug-line">
+                            <span class="debug-key">message</span>
+                            <span class="debug-value">{{message}}</span>
+                        </div>
                         {{/foreach}}
-                    </ul>
-                </section>
-                {{/if}}
-
-            </section>
-
-        </div>
-    </section>
-
-</main>
-
-<footer class="gh-foot">
-    <div class="gh-container">
-        <div class="gh-foot-menu">
-            {{navigation type="secondary"}}
-        </div>
-        <div class="gh-foot-meta">
-            Published with <a href="https://ghost.org" target="_blank" rel="noopener">Ghost</a>
+                    </div>
+                    {{/foreach}}
+                </div>
+            </div>
+            {{else}}
+            {{#is "404"}}
+            <div class="error-debug">
+                <div class="debug-header">
+                    <span class="debug-label">debug_info:</span>
+                </div>
+                <div class="debug-content">
+                    <div class="debug-line">
+                        <span class="debug-key">requested_url</span>
+                        <span class="debug-value">{{@site.url}}{{@original_url}}</span>
+                    </div>
+                    <div class="debug-line">
+                        <span class="debug-key">timestamp</span>
+                        <span class="debug-value">{{date format='YYYY-MM-DD HH:mm:ss'}}</span>
+                    </div>
+                    <div class="debug-line">
+                        <span class="debug-key">user_agent</span>
+                        <span class="debug-value">{{@site.title}} visitor</span>
+                    </div>
+                </div>
+            </div>
+            {{/is}}
+            {{/if}}
         </div>
     </div>
-</footer>
+</main>
 
-</div>
+<style>
+/* Error page specific styles */
+.error-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--spacing-2xl) 0;
+    text-align: center;
+}
 
-{{!-- <foot> --}}
-{{ghost_foot}}
-{{!-- Outputs important scripts - should always be included before closing body tag --}}
+.error-header {
+    margin-bottom: var(--spacing-2xl);
+}
 
-</body>
-</html>
+.error-code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-2xl);
+}
+
+.error-number {
+    color: var(--accent);
+    font-weight: bold;
+    font-size: var(--font-size-4xl);
+}
+
+.error-separator {
+    color: var(--fg-muted);
+    font-size: var(--font-size-3xl);
+}
+
+.error-type {
+    color: var(--fg-secondary);
+    font-size: var(--font-size-lg);
+}
+
+.error-title {
+    font-size: var(--font-size-3xl);
+    margin: 0 0 var(--spacing-lg) 0;
+    color: var(--fg-primary);
+    font-family: var(--font-mono);
+    line-height: var(--line-height-heading);
+}
+
+.error-description {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.error-description p {
+    margin: var(--spacing-sm) 0;
+    color: var(--fg-secondary);
+    line-height: var(--line-height-base);
+}
+
+.error-hint {
+    color: var(--fg-muted) !important;
+    font-style: italic;
+    font-size: var(--font-size-sm);
+}
+
+/* Terminal-style actions */
+.error-actions {
+    margin-bottom: var(--spacing-2xl);
+    text-align: left;
+    background-color: var(--bg-secondary);
+    border: var(--border-width) var(--border-style) var(--border);
+    padding: var(--spacing-lg);
+}
+
+.terminal-prompt {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+}
+
+.prompt-symbol {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.prompt-text {
+    color: var(--fg-secondary);
+}
+
+.command-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.command-link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
+    text-decoration: none;
+    border-radius: 0;
+    transition: background-color 0.2s ease;
+}
+
+.command-link:hover {
+    background-color: var(--bg-primary);
+}
+
+.command-name {
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    min-width: 120px;
+    text-align: left;
+}
+
+.command-desc {
+    color: var(--fg-muted);
+    font-size: var(--font-size-sm);
+}
+
+/* Debug info section */
+.error-debug {
+    text-align: left;
+    background-color: var(--bg-secondary);
+    border: var(--border-width) var(--border-style) var(--border);
+    padding: var(--spacing-lg);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+}
+
+.debug-header {
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: var(--border-width) var(--border-style) var(--border);
+}
+
+.debug-label {
+    color: var(--fg-secondary);
+    font-weight: bold;
+}
+
+.debug-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.debug-section {
+    padding: var(--spacing-md);
+    border-left: 4px solid var(--accent);
+    background-color: var(--bg-primary);
+}
+
+.debug-rule {
+    color: var(--accent);
+    font-weight: bold;
+    margin-bottom: var(--spacing-sm);
+}
+
+.debug-line {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xs);
+}
+
+.debug-key {
+    color: var(--fg-muted);
+    min-width: 140px;
+    flex-shrink: 0;
+}
+
+.debug-key::after {
+    content: ':';
+}
+
+.debug-value {
+    color: var(--fg-secondary);
+    word-break: break-all;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .error-page {
+        padding: var(--spacing-xl) var(--spacing-md);
+    }
+    
+    .error-code {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .error-number {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .error-title {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .command-link {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+    
+    .command-name {
+        min-width: auto;
+    }
+    
+    .debug-line {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+    }
+    
+    .debug-key {
+        min-width: auto;
+    }
+}
+
+/* Animation for error code */
+@keyframes glitch {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-2px); }
+    40% { transform: translateX(2px); }
+    60% { transform: translateX(-1px); }
+    80% { transform: translateX(1px); }
+}
+
+.error-number:hover {
+    animation: glitch 0.3s ease-in-out;
+}
+</style>
+
+<script>
+// Add some terminal-like interactivity
+document.addEventListener('DOMContentLoaded', function() {
+    // Add typing effect to error title
+    const errorTitle = document.querySelector('.error-title');
+    if (errorTitle) {
+        const text = errorTitle.textContent;
+        errorTitle.textContent = '';
+        let i = 0;
+        
+        function typeWriter() {
+            if (i < text.length) {
+                errorTitle.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+        
+        setTimeout(typeWriter, 500);
+    }
+    
+    // Add keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            window.history.back();
+        } else if (e.key === 'Enter' || e.key === ' ') {
+            window.location.href = '{{@site.url}}';
+        }
+    });
+});
+</script>

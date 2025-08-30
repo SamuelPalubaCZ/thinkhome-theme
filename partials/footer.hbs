@@ -1,0 +1,42 @@
+<footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+        <div class="footer-content">
+            <div class="footer-info">
+                <span class="copyright">
+                    © {{date format="YYYY"}} {{@site.title}}
+                </span>
+                {{#if @site.description}}
+                    <span class="site-description">{{@site.description}}</span>
+                {{/if}}
+            </div>
+            
+            {{#if @site.secondary_navigation}}
+                <nav class="footer-nav" role="navigation" aria-label="Footer navigation">
+                    <ul class="footer-nav-list">
+                        {{#foreach @site.secondary_navigation}}
+                            <li class="footer-nav-item">
+                                <a class="footer-nav-link" href="{{url absolute="true"}}">{{label}}</a>
+                            </li>
+                        {{/foreach}}
+                    </ul>
+                </nav>
+            {{/if}}
+            
+            <div class="footer-meta">
+                {{#if @site.facebook}}
+                    <a class="social-link" href="{{facebook_url @site.facebook}}" target="_blank" rel="noopener" aria-label="Facebook">[fb]</a>
+                {{/if}}
+                {{#if @site.twitter}}
+                    <a class="social-link" href="{{twitter_url @site.twitter}}" target="_blank" rel="noopener" aria-label="Twitter">[tw]</a>
+                {{/if}}
+                {{#if @site.members_enabled}}
+                    <a class="social-link" href="{{@site.url}}/rss/" target="_blank" rel="noopener" aria-label="RSS Feed">[rss]</a>
+                {{/if}}
+                
+                <span class="powered-by">
+                    powered by <a href="https://ghost.org" target="_blank" rel="noopener">ghost</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</footer>

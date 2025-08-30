@@ -1,79 +1,70 @@
 <!DOCTYPE html>
-<html lang="{{@site.locale}}">
+<html lang="{{@site.locale}}"{{#if @custom.color_scheme}} class="light-mode"{{else}} class="dark-mode"{{/if}}>
 <head>
-
+    {{!-- Document Settings --}}
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{asset "built/index.css"}}" />
-    <script src="{{asset "built/index.js"}}" defer></script>
-
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    {{!-- Page Meta --}}
     <title>{{meta_title}}</title>
-
-    {{ghost_head}}
-    {{!-- Outputs important meta data and settings, should always be in <head> --}}
-
+    
+    {{!-- Theme Styles --}}
+    <link rel="stylesheet" type="text/css" href="{{asset "css/index.css"}}" />
+    
+    {{!-- Preload Fonts --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    {{!-- Custom CSS Variables --}}
+    <style>
+        :root {
+            --accent-color: {{@custom.accent_color}};
+            --base-font-size: 16px;
+        }
+    </style>
+    
+    {{!-- Ghost outputs SEO meta, structured data, and other important tags --}}
+    {{{ghost_head}}}
 </head>
-<body class="{{body_class}}">
-<div class="gh-viewport">
 
-<header id="gh-head" class="gh-head">
-    <nav class="gh-head-inner gh-container">
-
-        <div class="gh-head-brand">
-            <a class="gh-head-logo" href="{{@site.url}}">
-                {{#if @site.logo}}
-                    <img src="{{@site.logo}}" alt="{{@site.title}}" />
-                {{else}}
-                    {{@site.title}}
-                {{/if}}
-            </a>
-            <a class="gh-burger" role="button" aria-label="menu">
-                <div class="gh-burger-box">
-                    <div class="gh-burger-inner"></div>
+<body class="{{body_class}}{{#if @custom.show_cursor}} cursor-enabled{{/if}}">
+    <div class="site-wrapper">
+        
+        {{!-- Site Header --}}
+        {{> header}}
+        
+        {{!-- Main Content Area --}}
+        <main class="site-main" role="main">
+            {{{body}}}
+        </main>
+        
+        {{!-- Site Footer --}}
+        {{> footer}}
+        
+        {{!-- Search Overlay --}}
+        <div class="search-overlay">
+            <div class="search-container">
+                <div class="search-header">
+                    <span class="search-prompt">search:</span>
+                    <button class="search-close" aria-label="Close search">[x]</button>
                 </div>
-            </a>
-        </div>
-        <div class="gh-head-menu">
-            {{navigation}}
-        </div>
-        <div class="gh-head-actions">
-            <div class="gh-head-actions-list">
-                {{search}}
-                {{#if @site.members_enabled}}
-                    {{^if @member}}
-                    <a class="gh-button" href="{{@site.signup_url}}">Subscribe</a>
-                    {{else}}
-                    <a class="gh-button" href="#/portal/account">Account</a>
-                    {{/if}}
-                {{/if}}
+                <input type="text" class="search-input" placeholder="type to search..." data-ghost-search>
+                <div class="search-results"></div>
             </div>
         </div>
-    </nav>
-</header>
-
-<main class="gh-main">
-
-    {{{body}}}
-    {{!-- All content gets inserted here, index.hbs, post.hbs, etc --}}
-
-</main>
-
-<footer class="gh-foot">
-    <div class="gh-container">
-        <div class="gh-foot-menu">
-            {{navigation type="secondary"}}
-        </div>
-        <div class="gh-foot-meta">
-            Published with <a href="https://ghost.org" target="_blank" rel="noopener">Ghost</a>
-        </div>
+        
     </div>
-</footer>
-
-</div>
-
-{{!-- <foot> --}}
-{{ghost_foot}}
-{{!-- Outputs important scripts - should always be included before closing body tag --}}
-
+    
+    {{!-- Theme JavaScript --}}
+    <script src="{{asset "js/index.js"}}"></script>
+    
+    {{!-- Block for additional scripts from other templates --}}
+    {{{block "scripts"}}}
+    
+    {{!-- Ghost outputs important scripts and data - always last --}}
+    {{{ghost_foot}}}
 </body>
 </html>
